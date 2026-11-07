@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "title": {
+    "en": "Stxr /side plugin index",
+    "zh": "Stxr /side 插件索引"
+  },
+  "description": {
+    "en": "Third-party plugins. Add this index yourself to browse and install.",
+    "zh": "第三方插件索引；用户需自行添加此源后浏览和安装。"
+  },
+  "plugins": [
+    {
+      "name": "@local/dsh-codex-side",
+      "title": {
+        "en": "Side conversations",
+        "zh": "旁支对话 /side"
+      },
+      "description": {
+        "en": "Ask and follow up in a separate conversation with inherited context while the main task keeps running, like Codex /side.",
+        "zh": "像 Codex 一样继承当前上下文，在独立旁支里提问和追问，主任务继续运行。"
+      },
+      "icon": "./icon.svg",
+      "author": "Stxr",
+      "homepage": "https://github.com/Stxr/dsh-codex-side",
+      "repository": {
+        "url": "https://github.com/Stxr/dsh-codex-side.git"
+      },
+      "metadata": {
+        "keywords": [
+          "dsh-plugin",
+          "deepseek-harness",
+          "codex",
+          "side-conversation",
+          "旁支",
+          "对话",
+          "sidebar"
+        ]
+      },
+      "versions": [
+        {
+          "version": "1.4.2",
+          "publishTimestamp": 1794013933,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/Stxr/dsh-codex-side.git",
+            "commit": "1090d5d3325906a4b893f335342a9387ceb44e7b"
+          },
+          "engines": {
+            "dsh": "0.2.2-rc.1"
+          }
+        }
+      ]
+    }
+  ]
+}
