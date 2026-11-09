@@ -38,6 +38,18 @@
       },
       "versions": [
         {
+          "version": "1.4.3",
+          "publishTimestamp": 1794245887,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/Stxr/dsh-codex-side.git",
+            "commit": "ab9554a84be888d9928a59a183d45f0b447f55fa"
+          },
+          "engines": {
+            "dsh": "0.2.2-rc.1"
+          }
+        },
+        {
           "version": "1.4.2",
           "publishTimestamp": 1794013933,
           "source": {
