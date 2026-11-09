@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { Session, SESSION_FORMAT_VERSION, KNOWN_SESSION_EVENT_TYPES } from '@deepseek-ai/dsh-session';
 import { releasedV4SessionFormatCodec, restoreReleasedV4Artifact } from '@deepseek-ai/dsh-session-format-v3-to-v4';
-import { apply } from '../index.js';
-import { KEY, TRANSCRIPT_KEY, MARKER, SIDE_POLICY, PERMANENT_POLICY, decodeResult, isTemporary } from '../core.js';
+import { importRuntime } from './runtime.js';
+const { apply } = await importRuntime('index.js');
+const { KEY, TRANSCRIPT_KEY, MARKER, SIDE_POLICY, PERMANENT_POLICY, decodeResult, isTemporary } = await importRuntime('core.js');
 
 // The plugin and fork/surface validation are real. The Agent factory, projection
 // registry, title model and persistence checkpoints below are deliberately small

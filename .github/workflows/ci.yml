@@ -17,12 +17,12 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci --ignore-scripts --no-audit --no-fund
-      - run: npm run build
       - run: npm run check
-      - run: npm test
       - name: Validate user-added plugin index
         if: ${{ hashFiles('dsh-plugin-index.json') != '' }}
         run: npm run index:check
       - name: Check committed runtime is reproducible
-        run: git diff --exit-code -- runtime/
+        run: |
+          git diff --exit-code -- runtime/
+          test -z "$(git ls-files --others --exclude-standard runtime/)"
       - run: npm pack --ignore-scripts --dry-run

@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
-import { isInternalCommandId } from '../core.js';
+import { importRuntime, runtimeFile } from './runtime.js';
+const { isInternalCommandId } = await importRuntime('core.js');
 
 // Exercise the shipped plain-JS Client registration; no React component is
 // mounted and this is not a visual/browser test.
@@ -11,7 +12,7 @@ async function internalDefinition(t) {
   const definitions = [];
   const cleanups = [];
   const noop = () => {};
-  vm.runInNewContext(await readFile(new URL('../client.js', import.meta.url), 'utf8'), {
+  vm.runInNewContext(await readFile(runtimeFile('client.js'), 'utf8'), {
     window: { __ModuleLoader__: { load(entry) {
       plugin = entry.factory(name => {
         assert.equal(name, 'react');

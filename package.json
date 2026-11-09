@@ -1,6 +1,6 @@
 {
   "name": "@local/dsh-codex-side",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "private": true,
   "type": "module",
   "description": "Codex-style side conversations for DeepSeek Harness",
@@ -14,38 +14,49 @@
   "bugs": {
     "url": "https://github.com/Stxr/dsh-codex-side/issues"
   },
-  "keywords": ["dsh-plugin", "deepseek-harness", "codex", "side-conversation"],
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "codex",
+    "side-conversation"
+  ],
   "engines": {
     "dsh": "0.2.2-rc.1"
   },
+  "main": "./runtime/1.4.3/index.js",
+  "types": "./runtime/1.4.3/types/host/index.d.ts",
   "exports": {
-    ".": "./runtime/1.4.2/index.js",
-    "./client": "./runtime/1.4.2/client.js",
+    ".": {
+      "types": "./runtime/1.4.3/types/host/index.d.ts",
+      "default": "./runtime/1.4.3/index.js"
+    },
+    "./client": "./runtime/1.4.3/client.js",
     "./locale/*.json": "./locale/*.json",
     "./icon": "./icon.svg"
   },
   "files": [
-    "index.js",
-    "core.js",
-    "client.js",
-    "workspace-adapter.js",
-    "title.js",
+    "runtime/1.4.3/",
+    "src/",
+    "scripts/",
+    "tsconfig.json",
+    "tsconfig.build.json",
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
     "README.md",
     "RELEASING.md",
+    "ARCHITECTURE.md",
+    "VERIFICATION.md",
     "LICENSE",
-    "runtime/1.4.2/*.js",
-    "scripts/*.mjs",
-    "test/*.test.js"
+    "test/"
   ],
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "index:build": "node scripts/build-index.mjs",
-    "index:check": "node scripts/check-index.mjs",
-    "test": "node --test test/*.test.js",
-    "check": "node --check index.js && node --check core.js && node --check client.js && node --check workspace-adapter.js && node --check title.js"
+    "build": "tsx scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "index:build": "tsx scripts/build-index.ts",
+    "index:check": "tsx scripts/check-index.ts",
+    "test": "tsx scripts/test.ts",
+    "check": "npm run typecheck && npm test"
   },
   "dependencies": {
     "@deepseek-ai/dsh-llm": "0.2.2-rc.1",
@@ -68,7 +79,13 @@
     }
   },
   "devDependencies": {
+    "@deepseek-ai/dsh-plugin-market-index": "0.2.2-rc.1",
     "@deepseek-ai/dsh-session-format-v3-to-v4": "0.2.2-rc.1",
-    "@deepseek-ai/dsh-plugin-market-index": "0.2.2-rc.1"
+    "@types/node": "24.10.0",
+    "@types/react": "19.1.16",
+    "esbuild": "0.25.12",
+    "react": "19.1.1",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
   }
 }

@@ -98,14 +98,16 @@ Harness `0.2.2-rc.1` 没有公开的会话可见性筛选注册表。插件通�
 git clone https://github.com/Stxr/dsh-codex-side.git
 cd dsh-codex-side
 npm ci --ignore-scripts
-npm run build
 npm run check
-npm test
 ```
 
 在 Harness 中进行本地开发安装时，将插件安装目标设为这个克隆目录的**绝对路径**。目录安装会链接源码；先安装依赖并构建，再通过 Harness 的 `plugin_manager` 安装。不要在 DSH profile 目录手动运行包管理器或编辑 profile 清单。
 
-公开 Git 版本包含当前 [runtime](./runtime/1.4.2/) 和 [锁文件](./package-lock.json)，从索引安装不依赖安装脚本。源码与版本化输出由 [构建脚本](./scripts/build.mjs) 同步。
+唯一维护入口是 [Host TypeScript](./src/host/index.ts) 和 [Client TSX](./src/client/index.tsx)。`npm run check` 依次执行严格类型检查、构建和完整回归；`npm test` 也会先构建，测试只读取发行产物。可单独运行 `npm run typecheck` 或 `npm run build`。
+
+公开 Git 版本包含当前 [runtime](./runtime/1.4.3/) 和 [锁文件](./package-lock.json)，从索引安装不依赖安装脚本。[构建脚本](./scripts/build.ts) 输出五个 JavaScript 模块和类型声明，保留每次发布独立的 `runtime/<version>/` 路径，让 Loader 获取新的模块 generation；不要把导出改回固定路径或根目录 shim。旧手写 JavaScript 已移除，产物请通过 TS 源修改并重新构建。
+
+模块职责见 [架构说明](./ARCHITECTURE.md)，执行结果及验收范围见 [验证记录](./VERIFICATION.md)。
 
 测试覆盖旁支生命周期、原生 V4 编码与冷恢复、命令去重、永久化与分组、tab 关闭和跳转、AI 标题选择与失败保护。测试使用可控 LLM stub，不代表对用户实际模型服务的在线验收。
 

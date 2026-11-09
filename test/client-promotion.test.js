@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFile } from 'node:fs/promises';
+import { runtimeFile } from './runtime.js';
 
 // Invoke the actual callback injected into the native tab registration. No
 // React component, owner hook, or substitute browser is rendered in this test.
@@ -15,7 +16,7 @@ async function fixture(t, options = {}) {
   const events = [];
   const cleanups = [];
   const noop = () => {};
-  vm.runInNewContext(await readFile(new URL('../client.js', import.meta.url), 'utf8'), {
+  vm.runInNewContext(await readFile(runtimeFile('client.js'), 'utf8'), {
     AbortController,
     window: { __ModuleLoader__: { load(entry) {
       plugin = entry.factory(name => {

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { retitleSide, titleInput } from '../title.js';
+import { importRuntime } from './runtime.js';
+const { retitleSide, titleInput } = await importRuntime('title.js');
 
 // Chunk assembly uses the real native LLM SDK. Host integration tests separately
 // replay the accepted events through the strict released V4 codec.

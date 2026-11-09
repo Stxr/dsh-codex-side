@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { fold, initState, initTranscriptState, metadataView, transcriptView, parseInput, KEY, TRANSCRIPT_KEY, MARKER, RESULT, SIDE_POLICY, isTemporary, blockSideTool, keyedQueue } from '../core.js';
+import { importRuntime } from './runtime.js';
+const { fold, initState, initTranscriptState, metadataView, transcriptView, parseInput, KEY, TRANSCRIPT_KEY, MARKER, RESULT, SIDE_POLICY, isTemporary, blockSideTool, keyedQueue } = await importRuntime('core.js');
 const event = (type, seq, data) => ({ type, seq, time: seq, data });
 const row = (role, text, id = role) => ({ id, role, content: [{ type: 'text', text }] });
 

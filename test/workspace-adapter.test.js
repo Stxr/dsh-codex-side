@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
-import { isTemporarySideSummary, patchWorkspaceSource, stampWorkspaceUrls, createWorkspaceResource, installWorkspaceAdapter } from '../workspace-adapter.js';
+import { importRuntime } from './runtime.js';
+const { isTemporarySideSummary, patchWorkspaceSource, stampWorkspaceUrls, createWorkspaceResource, installWorkspaceAdapter } = await importRuntime('workspace-adapter.js');
 
 // Exact native visibility signature and archive semantics of the supported
 // release. Tests exercise the resource adapter, not a fabricated visual page.
