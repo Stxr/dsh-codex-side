@@ -31,6 +31,8 @@ English: open **Plugins → Discover → Add index source**, add the URL above y
 
 也可从 [Releases](https://github.com/Stxr/dsh-codex-side/releases) 下载 `.tgz`，在 Harness 的插件安装入口选择该文件。包内已包含运行时文件，无须在安装时构建。运行时依赖由插件管理器安装；本项目没有安装脚本，也未发布到 npm registry。
 
+`dsh-session`、`dsh-llm` 和 `dsh-session-title-llm` 由当前 Harness 提供，插件仅声明 peer dependencies；开发和测试使用的固定版本放在 devDependencies。不要将这些宿主模块安装到 profile 的顶层 `node_modules`：旧副本会遮蔽升级后的内置模块，使核心 `sessions` 服务无法启动。Harness profile 应保留 `autoInstallPeers: false`。历史安装已留下旧副本时，需要先清理对应安装依赖；更新插件清单不会自动删除其他依赖或手工复制的文件。此调整不扩大上面声明的宿主兼容范围。
+
 卸载通过 Harness 插件管理器进行。索引源由用户独立管理，卸载插件不会替用户删除索引。
 
 ## 使用

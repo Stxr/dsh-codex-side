@@ -18,6 +18,12 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run check
+      - run: npm run test:install
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '11.7.0'
+          run_install: false
+      - run: npm run test:install -- --pnpm
       - name: Validate user-added plugin index
         if: ${{ hashFiles('dsh-plugin-index.json') != '' }}
         run: npm run index:check
