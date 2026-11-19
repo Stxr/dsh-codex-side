@@ -6,7 +6,7 @@
 
 Codex-style side conversations for DeepSeek Harness: ask in a native sidebar without interrupting the main task, then keep a branch as a permanent conversation with an AI-generated title.
 
-**兼容版本：DeepSeek Harness `0.2.2-rc.1`。** 当前发行版只声明对这个版本的兼容性；会话列表适配依赖该版本的组件结构。
+**1.4.4 兼容 DeepSeek Harness `0.2.2-rc.5`。** 旧版 Harness 可在索引中选择对应的旧发行版。会话列表适配依赖 DSH 发行版生成的工作区组件结构。
 
 ## 安装：用户自行添加索引源
 
@@ -29,7 +29,7 @@ English: open **Plugins → Discover → Add index source**, add the URL above y
 
 ### 发行包安装
 
-也可从 [Releases](https://github.com/Stxr/dsh-codex-side/releases) 下载 `.tgz`，在 Harness 的插件安装入口选择该文件。包内已包含运行时文件，无须在安装时构建。运行时依赖由插件管理器安装；本项目没有安装脚本，也未发布到 npm registry。
+也可从 [Releases](https://github.com/Stxr/dsh-codex-side/releases) 下载 `.tgz`，在 Harness 的插件安装入口选择该文件。包内已编译好运行时。插件管理器安装 `zod`，Harness 提供 `dsh-llm`、`dsh-session` 和 `dsh-session-title-llm`。这三个依赖声明为 optional peer，避免包管理器自动安装第二份宿主 SDK。
 
 卸载通过 Harness 插件管理器进行。索引源由用户独立管理，卸载插件不会替用户删除索引。
 
@@ -84,7 +84,7 @@ English: open **Plugins → Discover → Add index source**, add the URL above y
 
 ## 兼容方式
 
-Harness `0.2.2-rc.1` 没有公开的会话可见性筛选注册表。插件通过 `webServer` / `clientModules` 的公开 HTTP 资源和 index-transform 接口，为原生工作区浏览器的共享可见性函数增加临时旁支判断。继续使用原有浏览器、分组、排序、搜索和计数，不修改应用文件，不伪装子代理，也不改变完整 Session catalogue 或归档状态。
+Harness `0.2.2-rc.5` 没有公开的会话可见性筛选注册表。插件通过 `webServer` / `clientModules` 的公开 HTTP 资源和 index-transform 接口，为原生工作区浏览器的共享可见性函数增加临时旁支判断。继续使用原有浏览器、分组、排序、搜索和计数，不修改应用文件，不伪装子代理，也不改变完整 Session catalogue 或归档状态。
 
 适配先检查原生函数签名，未知结构会明确报错。相关 bundle URL 添加适配版本以避开旧的 immutable 浏览器缓存；首次安装后需要刷新页面。卸载撤销路由和 index 处理。旧旁支缺少目录元数据时，以最多 4 并发的 projection 读取补齐，不启动 Agent。
 
@@ -105,7 +105,7 @@ npm run check
 
 唯一维护入口是 [Host TypeScript](./src/host/index.ts) 和 [Client TSX](./src/client/index.tsx)。`npm run check` 依次执行严格类型检查、构建和完整回归；`npm test` 也会先构建，测试只读取发行产物。可单独运行 `npm run typecheck` 或 `npm run build`。
 
-公开 Git 版本包含当前 [runtime](./runtime/1.4.3/) 和 [锁文件](./package-lock.json)，从索引安装不依赖安装脚本。[构建脚本](./scripts/build.ts) 输出五个 JavaScript 模块和类型声明，保留每次发布独立的 `runtime/<version>/` 路径，让 Loader 获取新的模块 generation；不要把导出改回固定路径或根目录 shim。旧手写 JavaScript 已移除，产物请通过 TS 源修改并重新构建。
+公开 Git 版本包含当前 [runtime](./runtime/1.4.4/) 和 [锁文件](./package-lock.json)，从索引安装不依赖安装脚本。[构建脚本](./scripts/build.ts) 输出五个 JavaScript 模块和类型声明，保留每次发布独立的 `runtime/<version>/` 路径，让 Loader 获取新的模块 generation；不要把导出改回固定路径或根目录 shim。旧手写 JavaScript 已移除，产物请通过 TS 源修改并重新构建。
 
 模块职责见 [架构说明](./ARCHITECTURE.md)，执行结果及验收范围见 [验证记录](./VERIFICATION.md)。
 

@@ -4,8 +4,7 @@ import vm from 'node:vm';
 import { importRuntime } from './runtime.js';
 const { isTemporarySideSummary, patchWorkspaceSource, stampWorkspaceUrls, createWorkspaceResource, installWorkspaceAdapter } = await importRuntime('workspace-adapter.js');
 
-// Exact native visibility signature and archive semantics of the supported
-// release. Tests exercise the resource adapter, not a fabricated visual page.
+// The readable fixture gives each native archive rule its own assertion.
 const native = `function sessionVisible(session, current, archived, archivedFilter) {
   if (session.origin === "subagent") return false;
   if (session.blank && session.id !== current) return false;
@@ -44,6 +43,16 @@ test('one native predicate filters temporary rows in every archive mode without 
   assert.equal(visible({ id: 'blank', blank: true }, 'blank', new Set(), 'default'), true);
 });
 
+test('the compact rc.5 bundle form hides a side until it is promoted', () => {
+  // Opening of the shipped rc.5 Workspace Client predicate.
+  const compact = 'function sessionVisible(session,current,archived,archivedFilter){if(session.origin===`subagent`)return false;if(session.blank&&session.id!==current)return false;return !archived.has(session.id)}';
+  const visible = vm.runInNewContext(`(${patchWorkspaceSource(compact)})`);
+  assert.equal(visible(row({ parentId: 'main', permanent: false }), null, new Set(), 'default'), false);
+  assert.equal(visible(row({ parentId: 'main', permanent: true }), null, new Set(), 'default'), true);
+  assert.equal(visible({ origin: 'subagent' }, null, new Set(), 'default'), false);
+  assert.throws(() => patchWorkspaceSource(native + compact), /exactly one known/);
+});
+
 test('unknown or duplicated native signatures fail explicitly instead of changing arbitrary code', () => {
   assert.throws(() => patchWorkspaceSource('function differentBrowser() {}'), /exactly one known/);
   assert.throws(() => patchWorkspaceSource(native + native), /exactly one known/);
@@ -54,12 +63,12 @@ test('index cache identity changes only for workspace bundles and remains valid 
   const unrelated = 'plugins/??react&rev=r';
   const html = `<link href="${workspace.replaceAll('&', '&amp;')}"><script>const graph=${JSON.stringify({ url: workspace, other: unrelated })}</script>`;
   const patched = stampWorkspaceUrls(html);
-  assert.ok(patched.includes('&amp;codex_side_view=1.4.0'));
-  assert.ok(patched.includes('&codex_side_view=1.4.0'));
+  assert.ok(patched.includes('&amp;codex_side_view=1.4.4'));
+  assert.ok(patched.includes('&codex_side_view=1.4.4'));
   assert.ok(patched.includes(`"other":"${unrelated}"`));
   assert.equal(stampWorkspaceUrls(patched), patched);
   const escaped = JSON.stringify({ url: workspace }).replaceAll('&', '\\u0026');
-  assert.ok(JSON.parse(stampWorkspaceUrls(escaped)).url.endsWith('&codex_side_view=1.4.0'));
+  assert.ok(JSON.parse(stampWorkspaceUrls(escaped)).url.endsWith('&codex_side_view=1.4.4'));
 });
 
 test('workspace HTTP responses preserve exact native URLs and avoid stale validators for modified code', async () => {
@@ -68,17 +77,17 @@ test('workspace HTTP responses preserve exact native URLs and avoid stale valida
     reads.push(request);
     return new Response(native, { headers: { 'content-type': 'text/javascript', etag: 'native-rev', 'cache-control': 'immutable', 'x-content-type-options': 'nosniff' } });
   } });
-  const response = await resource(new Request(sourceUrl + '&codex_side_view=1.4.0', { headers: { 'if-none-match': 'native-rev' } }));
+  const response = await resource(new Request(sourceUrl + '&codex_side_view=1.4.4', { headers: { 'if-none-match': 'native-rev' } }));
   assert.equal(reads[0].url, sourceUrl);
   assert.equal(reads[0].headers.get('if-none-match'), null);
   assert.equal(response.headers.get('cache-control'), 'no-store');
   assert.equal(response.headers.get('etag'), null);
   assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
-  assert.equal(response.headers.get('x-codex-side-visibility'), '1.4.0');
+  assert.equal(response.headers.get('x-codex-side-visibility'), '1.4.4');
   assert.ok((await response.text()).includes('local.codexSide.v1'));
   const head = await resource(new Request(sourceUrl, { method: 'HEAD' }));
   assert.equal(await head.text(), '');
-  assert.equal(head.headers.get('x-codex-side-visibility'), '1.4.0');
+  assert.equal(head.headers.get('x-codex-side-visibility'), '1.4.4');
   const otherResponse = new Response('other-module');
   const other = createWorkspaceResource({ fetchBundle: async request => { assert.ok(request.url.includes('react')); return otherResponse; } });
   assert.equal(await other(new Request('http://127.0.0.1/plugins/??react&rev=r')), otherResponse);

@@ -1,3 +1,9 @@
+# 1.4.4 验证记录
+
+- Node.js 24.22.3 下，`npm run check` 通过类型检查、构建和 74 项回归。连续两次构建的 30 个运行时文件逐字节一致。`npm run index:check` 验证了原有两条固定版本记录。
+- 对打包产物运行 `npm run test:install` 和 `npm run test:install -- --pnpm`，全新的消费者只安装本插件和 `zod`，不自动安装三个宿主 SDK。
+- 使用本机 Desktop DSH `0.2.2-rc.5` 的 Electron 和 ASAR runtime，在临时 DSH home 启动隔离 Web Host。打包插件实际执行 `/side`、`/side --status`、`/side --close`、`/side --keep`，验证继承原生 Session 历史、归档与释放、永久化保留相同会话 ID。已通过 HTTP 检查首页的工作区脚本 URL 缓存标记、改写后的原生工作区脚本及插件 Client 产物。此轮覆盖 Host 和 HTTP，浏览器交互与在线模型请求未作为验收项。
+
 # 1.4.3 验证记录
 
 验证日期：2026-11-10。环境：Node.js 24，npm，DeepSeek Harness SDK `0.2.2-rc.1`。本节记录发布前的自动化验证；验证未修改安装中的 DSH profile。

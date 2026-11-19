@@ -8,12 +8,14 @@
 
 1. 更新 `package.json` 和锁文件的版本；同步 `main`、`types`、`exports`、`files` 中的 `runtime/<version>/`，以及 `.gitignore` 当前版本白名单和 README 链接。构建器会检查运行时导出路径。
 2. 保留每次发布独立的版本化路径，例如 `runtime/1.4.3/index.js` 与 `runtime/1.4.3/client.js`。DSH Loader 需要新的路径才能得到新的模块 generation；不要用固定路径 shim 替代。
-3. 根据实际验证设置 `engines.dsh`，保留经验证的宿主运行依赖版本。
+3. 根据实际验证设置 `engines.dsh` 和宿主 SDK 版本。将由 Harness 提供的 SDK 维护为 optional peers，并在开发依赖中固定同版本。
 4. 执行：
 
 ```sh
 npm ci --ignore-scripts
 npm run check
+npm run test:install
+npm run test:install -- --pnpm
 npm run index:check
 npm pack --ignore-scripts
 ```
