@@ -56,12 +56,10 @@
     "index:build": "tsx scripts/build-index.ts",
     "index:check": "tsx scripts/check-index.ts",
     "test": "tsx scripts/test.ts",
-    "check": "npm run typecheck && npm test"
+    "check": "npm run typecheck && npm test",
+    "test:install": "tsx scripts/test-install.ts"
   },
   "dependencies": {
-    "@deepseek-ai/dsh-llm": "0.2.2-rc.1",
-    "@deepseek-ai/dsh-session": "0.2.2-rc.1",
-    "@deepseek-ai/dsh-session-title-llm": "0.2.2-rc.1",
     "zod": "4.4.3"
   },
   "dsh": {
@@ -79,13 +77,21 @@
     }
   },
   "devDependencies": {
+    "@deepseek-ai/dsh-llm": "0.2.2-rc.1",
     "@deepseek-ai/dsh-plugin-market-index": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-session": "0.2.2-rc.1",
     "@deepseek-ai/dsh-session-format-v3-to-v4": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-session-title-llm": "0.2.2-rc.1",
     "@types/node": "24.10.0",
     "@types/react": "19.1.16",
     "esbuild": "0.25.12",
     "react": "19.1.1",
     "tsx": "4.20.6",
     "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-llm": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-session": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-session-title-llm": "0.2.2-rc.1"
   }
 }
