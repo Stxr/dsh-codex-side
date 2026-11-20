@@ -139,7 +139,7 @@ function fold(state, event) {
 
 // src/host/workspace-adapter.ts
 var WORKSPACE_ID = "@deepseek-ai/dsh-client-ui-workspace";
-var REVISION = "1.4.0";
+var REVISION = "1.4.4";
 var MARKER2 = "codex_side_view";
 function isTemporarySideSummary(session) {
   if (typeof session !== "object" || session === null) return false;
@@ -153,7 +153,7 @@ function isTemporarySideSummary(session) {
   return typeof summary.id === "string" && /^side-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(summary.id);
 }
 function patchWorkspaceSource(source) {
-  const pattern = /function sessionVisible\(session, current, archived, archivedFilter\) \{\s*if \(session\.origin === "subagent"\) return false;/g;
+  const pattern = /function sessionVisible\(session,\s*current,\s*archived,\s*archivedFilter\)\s*\{\s*if\s*\(session\.origin\s*===\s*(["'`])subagent\1\)\s*return false\s*;/g;
   const matches = [...source.matchAll(pattern)];
   if (matches.length !== 1) throw new Error("Unsupported Harness workspace browser: /side requires exactly one known sessionVisible entry.");
   const predicate = isTemporarySideSummary.toString().replace(/\/\/[^\n]*/g, "").replace(/\n\s*/g, " ");

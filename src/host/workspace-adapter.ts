@@ -1,7 +1,7 @@
 import type { ClientModules, WorkspaceAdapterContext } from './types.js';
 
 const WORKSPACE_ID = '@deepseek-ai/dsh-client-ui-workspace';
-const REVISION = '1.4.0';
+const REVISION = '1.4.4';
 const MARKER = 'codex_side_view';
 
 /** 此函数会以源码插入原生浏览器，必须保持闭包无外部依赖。 */
@@ -20,7 +20,9 @@ export function isTemporarySideSummary(session: unknown): boolean {
 }
 
 export function patchWorkspaceSource(source: string): string {
-  const pattern = /function sessionVisible\(session, current, archived, archivedFilter\) \{\s*if \(session\.origin === "subagent"\) return false;/g;
+  // rc.5 compacts the emitted Client bundle and renders the literal in backticks.
+  // Keep the native function and exact first check as guardrails for the injection.
+  const pattern = /function sessionVisible\(session,\s*current,\s*archived,\s*archivedFilter\)\s*\{\s*if\s*\(session\.origin\s*===\s*(["'`])subagent\1\)\s*return false\s*;/g;
   const matches = [...source.matchAll(pattern)];
   if (matches.length !== 1) throw new Error('Unsupported Harness workspace browser: /side requires exactly one known sessionVisible entry.');
   const predicate = isTemporarySideSummary.toString().replace(/\/\/[^\n]*/g, '').replace(/\n\s*/g, ' ');
